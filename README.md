@@ -23,7 +23,7 @@ python main.py
 - `/help` - Show all commands
 - `/random` - Get 5 random servers
 - `/server` - Search servers with filters
-- `/mcinfo <ip>` - Get live server info
+- `/mcinfo <ip>` - Get live server info (could be buggy)
 - `/whois <ip>` - Find players on a server
 - `/whereis <username/uuid>` - Find servers a player has been on
 - `/stats` - Show database statistics
