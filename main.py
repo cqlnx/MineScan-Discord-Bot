@@ -316,7 +316,7 @@ async def random_cmd(interaction: discord.Interaction):
             value=(
                 f"**IP:** {ip}\n"
                 f"**Version:** {server.get('version', 'Unknown')}\n"
-                f"**Location:** {geo.get('city', 'Unknown')}, {geo.get('countryName', 'Unknown')}\n"
+                f"**Location:** :flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}, {geo.get('city', 'Unknown')}\n"
                 f"**Authentication:** {auth_info['icon']} {auth_info['text']}"
             ),
             inline=False
