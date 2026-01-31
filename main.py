@@ -190,7 +190,7 @@ class ServerButton(discord.ui.Button):
         embed = discord.Embed(title="Server Information", color=discord.Color.blue())
         embed.add_field(name="IP", value=ip, inline=False)
         embed.add_field(name="Version", value=str(self.server.get("version", "Unknown")), inline=True)
-        embed.add_field(name="Country", value=geo.get("countryName", "Unknown"), inline=True)
+        embed.add_field(name="Country", value=f":flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}",inline=True)
         embed.add_field(name="City", value=geo.get("city", "Unknown"), inline=True)
         embed.add_field(name="Last Seen", value=last_seen_display, inline=True)
 
@@ -250,7 +250,7 @@ class PageButton(discord.ui.Button):
                 value=(
                     f"**IP:** {ip}\n"
                     f"**Version:** {server.get('version', 'Unknown')}\n"
-                    f"**Location:** {geo.get('city', 'Unknown')}, {geo.get('countryName', 'Unknown')}\n"
+                    f"**Location:** :flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}, {geo.get('city', 'Unknown')}\n"
                     f"**Authentication:** {auth_info['icon']} {auth_info['text']}"
                 ),
                 inline=False
@@ -397,7 +397,7 @@ async def server_cmd(
             value=(
                 f"**IP:** {ip}\n"
                 f"**Version:** {server.get('version', 'Unknown')}\n"
-                f"**Location:** {geo.get('city', 'Unknown')}, {geo.get('countryName', 'Unknown')}\n"
+                f"**Location:** :flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}, {geo.get('city', 'Unknown')}\n"
                 f"**Authentication:** {auth_info['icon']} {auth_info['text']}"
             ),
             inline=False
