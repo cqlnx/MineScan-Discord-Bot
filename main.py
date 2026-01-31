@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands, tasks
 import requests
 from mcstatus import JavaServer
-from datetime import datetime
+from datetime import datetime,timezone
 import asyncio
 
 # Discord bot setup
@@ -177,13 +177,22 @@ class ServerButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         """Show server details when clicked"""
+        last_seen_raw = self.server.get("lastSeen")
+        if last_seen_raw:
+            dt = datetime.fromisoformat(last_seen_raw.replace("Z", "+00:00"))
+            last_seen_ts = int(dt.replace(tzinfo=timezone.utc).timestamp())
+            last_seen_display = f"<t:{last_seen_ts}:R>"
+        else:
+            last_seen_display = "Unknown"
+
         ip = self.server.get("serverip")
         geo = self.server.get("geolocation", {})
         embed = discord.Embed(title="Server Information", color=discord.Color.blue())
         embed.add_field(name="IP", value=ip, inline=False)
+        embed.add_field(name="Version", value=str(self.server.get("version", "Unknown")), inline=True)
         embed.add_field(name="Country", value=geo.get("countryName", "Unknown"), inline=True)
         embed.add_field(name="City", value=geo.get("city", "Unknown"), inline=True)
-        embed.add_field(name="Version", value=str(self.server.get("version", "Unknown")), inline=True)
+        embed.add_field(name="Last Seen", value=last_seen_display, inline=True)
 
         auth_info = map_authmode(self.server.get("authmode"))
         embed.add_field(name="Authentication", value=f"{auth_info['icon']} {auth_info['text']}", inline=True)
