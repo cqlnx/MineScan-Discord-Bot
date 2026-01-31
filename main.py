@@ -275,7 +275,6 @@ async def help_cmd(interaction: discord.Interaction):
     embed.add_field(name="🖥️ /server", value=server_help, inline=False)
     embed.add_field(name="🎲 /random", value="Gives a list of 5 random servers", inline=False)
     embed.add_field(name="📄 /mcinfo", value="Displays information about a server\nUsage: /mcinfo (IP of the server)", inline=False)
-    embed.add_field(name="📘 /info", value="Credits, Source and API", inline=False)
     embed.add_field(name="📈 /stats", value="Displays statistics about the bot.", inline=False)
     embed.add_field(name="👥 /whois", value="Find who has played on a server", inline=False)
     embed.add_field(name="🌍 /whereis", value="Find where a player has been", inline=False)
