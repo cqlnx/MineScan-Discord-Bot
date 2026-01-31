@@ -268,6 +268,7 @@ async def help_cmd(interaction: discord.Interaction):
         "• **page** — Starting page number (20 servers per page)\n"
         "• **software** — Filter by server software (e.g., Paper, Vanilla)\n"
         "• **version** — Filter by Minecraft version (e.g., 1.20.1)\n"
+        "• **country** — Filter by server location (e.g., EE, Estonia)\n"
         "• **sort** — Sort by: Last Seen, Player Count, or Version\n"
         "• **authmode** — Authentication: online / offline / whitelist\n"
         "• **minplayers** — Minimum number of online players\n"
@@ -319,6 +320,7 @@ async def random_cmd(interaction: discord.Interaction):
     page="Starting page number to fetch servers from (20 servers per page)",
     software="Filter by server software (e.g., Paper)",
     version="Filter by Minecraft version (e.g., 1.20.1)",
+    country="Filter by server country (e.g., EE, Estonia)",
     sort="Sort servers by different criteria",
     authmode="Choose authentication mode: online/offline/whitelist",
     minplayers="Minimum number of online players"
@@ -339,6 +341,7 @@ async def server_cmd(
     interaction: discord.Interaction,
     page: int = 1,
     software: str | None = None,
+    country: str | None = None,
     version: str | None = None,
     sort: discord.app_commands.Choice[str] | None = None,
     authmode: discord.app_commands.Choice[str] | None = None,
@@ -359,6 +362,8 @@ async def server_cmd(
         params["authmode"] = authmode.value
     if minplayers is not None: 
         params["minPlayers"] = minplayers
+    if country: 
+        params["country"] = country
 
     servers = fetch_servers(page=page, **params)
 
@@ -453,7 +458,7 @@ async def stats_cmd(interaction: discord.Interaction):
     total = fetch_total_servers()
 
     embed = discord.Embed(title="Statistics", color=discord.Color.blue())
-    embed.add_field(name="Bot author:", value="<@521371256763711489> (@cheezball69420)", inline=False)
+    embed.add_field(name="Bot author:", value="<@521371256763711489> (Reimopro)", inline=False)
     embed.add_field(name="API:", value="https://mcapi.shit.vc/", inline=False)
     embed.add_field(name="Total Servers:", value=f"**{total:,}**", inline=False)
 
