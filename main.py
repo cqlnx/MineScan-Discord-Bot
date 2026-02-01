@@ -19,7 +19,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 API_URL = "https://mcapi.shit.vc/servers"
 API_URL_WHEREIS = "https://mcapi.shit.vc/whereis"
 API_URL_WHO = "https://mcapi.shit.vc/who"
-
+API_RANDOM = "https://mcapi.shit.vc/servers/random"
 # ============================================================================
 # API HELPER FUNCTIONS - Fetch data from the Minecraft server database API
 # ============================================================================
@@ -33,10 +33,10 @@ def fetch_servers(page=1, **params):
     return response.json().get("servers", [])
 
 
-def fetch_random_servers():
+def fetch_random_servers(**params):
     """Get 5 random servers from the API"""
     try:
-        response = requests.get(f"{API_URL}/random")
+        response = requests.get(API_RANDOM, params=params)
         if response.status_code == 200:
             data = response.json()
             return data.get("servers", [])
@@ -293,11 +293,32 @@ async def help_cmd(interaction: discord.Interaction):
     await interaction.response.send_message(embed=embed)
 
 @bot.tree.command(name="random", description="Get 5 random Minecraft servers")
-async def random_cmd(interaction: discord.Interaction):
-    """Show 5 completely random servers from the database"""
+@discord.app_commands.describe(
+    software="Filter by server software (e.g., Paper)",
+    country="Filter by server country (e.g., EE, Estonia)",
+    minplayers="Minimum number of online players",
+    version="Filter by Minecraft version (e.g., 1.20.1)"
+)
+async def random_cmd(
+    interaction: discord.Interaction,
+    version : str | None = None,
+    software: str | None = None,
+    country: str | None = None,
+    minplayers: int | None = None
+):
     await interaction.response.defer()
 
-    servers = fetch_random_servers()
+    params = {}
+    if software: 
+        params["software"] = software
+    if minplayers is not None: 
+        params["minPlayers"] = minplayers
+    if country: 
+        params["country"] = country
+    if version:
+        params["version"] = version
+
+    servers = fetch_random_servers(**params)
 
     if not servers:
         await interaction.followup.send("No servers found (after privacy filtering).")
