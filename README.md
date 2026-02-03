@@ -21,7 +21,7 @@ python main.py
 ## Commands
 
 - `/help` - Show all commands
-- `/random` - Get 5 random servers
+- `/random` - Get 5 random servers with filters
 - `/server` - Search servers with filters
 - `/mcinfo <ip>` - Get live server info (could be buggy)
 - `/whois <ip>` - Find players on a server
