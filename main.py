@@ -20,9 +20,6 @@ API_URL = "https://mcapi.shit.vc/servers"
 API_URL_WHEREIS = "https://mcapi.shit.vc/whereis"
 API_URL_WHO = "https://mcapi.shit.vc/who"
 API_RANDOM = "https://mcapi.shit.vc/servers/random"
-# ============================================================================
-# API HELPER FUNCTIONS - Fetch data from the Minecraft server database API
-# ============================================================================
 
 def fetch_servers(page=1, **params):
     """Fetch a list of servers with optional filters (software, version, etc.)"""
@@ -79,11 +76,6 @@ def fetch_who(server_ip: str):
         return None
     return r.json()
 
-
-# ============================================================================
-# UTILITY FUNCTIONS - Helper functions for formatting and parsing data
-# ============================================================================
-
 def clean_motd(motd_obj):
     """Parse and clean the server's MOTD (message of the day)"""
     try:
@@ -113,10 +105,6 @@ def map_authmode(authmode_str: str) -> dict:
     }
     default = {"icon": ":question:", "text": "Unknown"}
     return auth_map.get((authmode_str or "").lower(), default)
-
-# ============================================================================
-# DISCORD UI COMPONENTS - Interactive buttons and embeds for Discord responses
-# ============================================================================
 
 class RandomServerButtons(discord.ui.View):
     """Creates clickable buttons for 5 random servers"""
@@ -188,7 +176,7 @@ class ServerButton(discord.ui.Button):
         ip = self.server.get("serverip")
         geo = self.server.get("geolocation", {})
         embed = discord.Embed(title="Server Information", color=discord.Color.blue())
-        embed.add_field(name="IP", value=ip, inline=False)
+        embed.add_field(name="IP", value=f"{ip}:{self.server.get('port', 'Unknown')}", inline=False)
         embed.add_field(name="Version", value=str(self.server.get("version", "Unknown")), inline=True)
         embed.add_field(name="Country", value=f":flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}",inline=True)
         embed.add_field(name="City", value=geo.get("city", "Unknown"), inline=True)
@@ -248,7 +236,7 @@ class PageButton(discord.ui.Button):
             embed.add_field(
                 name=f"Server {i}",
                 value=(
-                    f"**IP:** {ip}\n"
+                    f"**IP:** {ip}:{server.get('port', 'Unknown')}\n"
                     f"**Version:** {server.get('version', 'Unknown')}\n"
                     f"**Location:** :flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}, {geo.get('city', 'Unknown')}\n"
                     f"**Authentication:** {auth_info['icon']} {auth_info['text']}"
@@ -257,10 +245,6 @@ class PageButton(discord.ui.Button):
             )
 
         await interaction.response.edit_message(embed=embed, view=self.view_ref)
-
-# ============================================================================
-# DISCORD COMMANDS - Slash commands that users can interact with
-# ============================================================================
 
 @bot.tree.command(name="help", description="Show help for commands.")
 async def help_cmd(interaction: discord.Interaction):
@@ -335,7 +319,7 @@ async def random_cmd(
         embed.add_field(
             name=f"Server {i}",
             value=(
-                f"**IP:** {ip}\n"
+                f"**IP:** {ip}:{server.get('port', 'Unknown')}\n"
                 f"**Version:** {server.get('version', 'Unknown')}\n"
                 f"**Location:** :flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}, {geo.get('city', 'Unknown')}\n"
                 f"**Authentication:** {auth_info['icon']} {auth_info['text']}"
@@ -416,7 +400,7 @@ async def server_cmd(
         embed.add_field(
             name=f"Server {i}",
             value=(
-                f"**IP:** {ip}\n"
+                f"**IP:** {ip}:{server.get('port', 'unknown')}\n"
                 f"**Version:** {server.get('version', 'Unknown')}\n"
                 f"**Location:** :flag_{geo.get('country', 'Unknown').lower()}: {geo.get('countryName', 'Unknown')}, {geo.get('city', 'Unknown')}\n"
                 f"**Authentication:** {auth_info['icon']} {auth_info['text']}"
@@ -587,10 +571,6 @@ async def mcinfo(interaction: discord.Interaction, ip: str):
         await interaction.followup.send(embed=embed, view=view)
     except Exception as e:
         await interaction.followup.send(f"Could not reach `{ip}`.", ephemeral=True)
-
-# ============================================================================
-# BOT LIFECYCLE - Activity updates and startup events
-# ============================================================================
 
 @tasks.loop(minutes=5)
 async def update_activity():
