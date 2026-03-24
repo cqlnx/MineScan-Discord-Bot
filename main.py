@@ -9,21 +9,23 @@ import asyncio
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-#API
-API_URL = "https://mcapi.shit.vc"
+#api url
+API_URL = "https://api.minescan.xyz"
+API_KEY = "" #get your own key by sending a post request to https://api.minescan.xyz/api_keys/register
 
 #api fetch stuff
 def fetch_servers(page=1, **params):
     params["page"] = page
+    params["key"] = API_KEY
     response = requests.get(f"{API_URL}/servers", params=params)
     if response.status_code != 200:
         return []
     return response.json().get("servers", [])
 
-
 def fetch_random_servers(**params):
+    params["key"] = API_KEY
     try:
-        response = requests.get(f"{API_URL}/random", params=params)
+        response = requests.get(f"{API_URL}/servers/random", params=params)
         if response.status_code == 200:
             data = response.json()
             return data.get("servers", [])
@@ -31,10 +33,9 @@ def fetch_random_servers(**params):
     except:
         return []
 
-
 def fetch_total_servers():
     try:
-        response = requests.get(f"{API_URL}/servers")
+        response = requests.get(f"{API_URL}/servers", params={"key": API_KEY})
         if response.status_code == 200:
             data = response.json()
             return data.get("total", 0)
@@ -42,13 +43,12 @@ def fetch_total_servers():
     except:
         return 0
 
-
 def fetch_whereis(identifier: str):
-    r = requests.get(f"{API_URL}/whereis/{identifier}", timeout=10)
+    r = requests.get(f"{API_URL}/whereis/{identifier}", params={"key": API_KEY}, timeout=10)
     if r.status_code != 200:
         return None
     data = r.json()
-    # Try to find an exact match for the player
+    #try to find an exact match for the player
     if "players" not in data and data.get("name", "").lower() == identifier.lower():
         return data
     for p in data.get("players", []) or []:
@@ -58,7 +58,7 @@ def fetch_whereis(identifier: str):
 
 
 def fetch_who(server_ip: str):
-    r = requests.get(f"{API_URL}/who/{server_ip}")
+    r = requests.get(f"{API_URL}/who/{server_ip}", params={"key": API_KEY}, timeout=10)
     if r.status_code != 200:
         return None
     return r.json()
