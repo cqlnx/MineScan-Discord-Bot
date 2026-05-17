@@ -11,7 +11,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 #api url
 API_URL = "https://data.minescan.xyz"
-API_KEY = "" #get your own key by sending a post request to https://api.minescan.xyz/api_keys/register
+API_KEY = "" #get your own key by sending a post request to https://data.minescan.xyz/api_keys/register
 
 #api fetch stuff
 def fetch_servers(page=1, **params):
