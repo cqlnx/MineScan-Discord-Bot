@@ -11,19 +11,16 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 #api url
 API_URL = "https://data.minescan.xyz"
-API_KEY = "" #get your own key by sending a post request to https://data.minescan.xyz/api_keys/register
 
 #api fetch stuff
 def fetch_servers(page=1, **params):
     params["page"] = page
-    params["key"] = API_KEY
     response = requests.get(f"{API_URL}/servers", params=params)
     if response.status_code != 200:
         return []
     return response.json().get("servers", [])
 
 def fetch_random_servers(**params):
-    params["key"] = API_KEY
     try:
         response = requests.get(f"{API_URL}/servers/random", params=params)
         if response.status_code == 200:
@@ -35,7 +32,7 @@ def fetch_random_servers(**params):
 
 def fetch_total_servers():
     try:
-        response = requests.get(f"{API_URL}/servers", params={"key": API_KEY})
+        response = requests.get(f"{API_URL}/servers")
         if response.status_code == 200:
             data = response.json()
             return data.get("total", 0)
@@ -44,7 +41,7 @@ def fetch_total_servers():
         return 0
 
 def fetch_whereis(identifier: str):
-    r = requests.get(f"{API_URL}/whereis/{identifier}", params={"key": API_KEY}, timeout=10)
+    r = requests.get(f"{API_URL}/whereis/{identifier}", timeout=10)
     if r.status_code != 200:
         return None
     data = r.json()
@@ -58,7 +55,7 @@ def fetch_whereis(identifier: str):
 
 
 def fetch_who(server_ip: str):
-    r = requests.get(f"{API_URL}/who/{server_ip}", params={"key": API_KEY}, timeout=10)
+    r = requests.get(f"{API_URL}/who/{server_ip}", timeout=10)
     if r.status_code != 200:
         return None
     return r.json()
