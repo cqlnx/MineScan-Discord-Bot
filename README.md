@@ -2,7 +2,7 @@
 
 Discord bot for searching and getting info about Minecraft servers using the mcapi.shit.vc API.
 
-**[Join the Discord](https://discord.gg/AYbDNEWgHE)**
+**[Join the Discord](https://discord.gg/CaU4HuR33g)**
 
 ## Setup
 
